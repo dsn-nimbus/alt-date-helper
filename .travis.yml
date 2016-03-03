@@ -3,8 +3,14 @@ language: node_js
 node_js:
   - "stable"
 
+before_isntall:
+  - export CHROME_URL=https://storage.googleapis.com/chromium-browser-snapshots/Linux_x64
+  - export CHROME_REV=$(curl -s ${CHROME_URL}/LAST_CHANGE)
+  - curl ${CHROME_URL}/${CHROME_REV}/chrome-linux.zip --create-dirs -o out/chrome-linux.zip
+  - unzip out/chrome-linux.zip -d out
 before_script:
   - npm install -g gulp-cli bower
   - bower install
+  - export CHROME_CANARY_BIN=$PWD/out/chrome-linux/chrome
   - "export DISPLAY=:99.0"
   - "sh -e /etc/init.d/xvfb start"
