@@ -7,5 +7,4 @@ before_script:
   - npm install -g gulp-cli bower
   - bower install
   - "export DISPLAY=:99.0"
-  - "export CHROME_BIN=chromium-browser"
   - "sh -e /etc/init.d/xvfb start"
