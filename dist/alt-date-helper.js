@@ -10,6 +10,18 @@
 
 
         var _link = function (scope, element, attrs, ngModel) {
+            // Obtem a mascara passada por paramentro attr
+            // mascaras permitidas (default) __/__/____ ou __/____
+            var mask = (!!attrs && !!attrs.altDateHelper) ? attrs.altDateHelper : '__/__/____';
+
+            if (mask !== '__/__/____' && mask !== '__/____') {
+              mask = '__/__/____';
+            }
+
+            // Obtem o tamanho máximo pela mascara, apenas underlines
+            var maxLength = mask.replace(/([\/])/g,'').length;
+            maxLength = (maxLength !== 6 && maxLength !== 8) ? 8 : maxLength;
+
             var _startCursorPos = 0, _endCursorPos = 0, _initialElementValue = '';
 
             element.on("keydown", function (event) {
@@ -108,20 +120,21 @@
             }
 
             //adicao das barras
-            function _setValueBars(val){
-                if (val.length > 8)
-                {
-                    val = val.substr(0, 8);
+            function _setValueBars(val) {
+                if (val.length > maxLength) {
+                    val = val.substr(0, maxLength);
                 }
-                if (val.length > 4)
-                {
-                    val = val.substr(0, 2) + "/" + val.substr(2, 2) + "/" + val.substr(4, val.length - 4);
-                }
-                else if (val.length > 2)
-                {
+                
+                if (val.length > 4) {
+                    if(maxLength === 8) {
+                        val = val.substr(0, 2) + "/" + val.substr(2, 2) + "/" + val.substr(4, val.length - 4);
+                    } else if (maxLength === 6) {
+                        val = val.substr(0, 2) + "/" + val.substr(2, val.length - 2);
+                    }
+                } else if (val.length > 2) {
                     val = val.substr(0, 2) + "/" + val.substr(2, val.length - 2);
                 }
-
+      
                 return val;
             }
 

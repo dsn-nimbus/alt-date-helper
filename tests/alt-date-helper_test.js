@@ -2,7 +2,10 @@
 
 describe('Directive: alt.date-helper', function() {
   var _dateHelperDirective, _scope, _compile, _element, _evtKD, _evtInput;
-  var _html = '<input ng-model="mdl" alt-date-helper="{{mdl}}" />';
+  var _html = '<input ng-model="mdl" alt-date-helper />';
+  var _htmlDefault = '<input ng-model="mdl" alt-date-helper="__/__/____" />';
+  var _htmlMesAno = '<input ng-model="mdl" alt-date-helper="__/____" />';
+  var _htmlMascaraInvalida = '<input ng-model="mdl" alt-date-helper="__/__/____/____" />';
   beforeEach(module('alt.date-helper'));
 
   beforeEach(inject(function($injector) {
@@ -47,6 +50,39 @@ describe('Directive: alt.date-helper', function() {
     it('deve formatar a data, com todos caracteres possiveis', function() {
       _scope.mdl = "10011990";
       _element = angular.element(_html);
+      _compile(_element)(_scope);
+      _scope.$digest();
+      $(_element).trigger(_evtKD);
+      $(_element).trigger(_evtInput);
+
+      expect(_scope.mdl).toEqual("10/01/1990");
+    });
+
+    it('deve formatar a data, com todos caracteres possiveis - passando mascara Default', function() {
+      _scope.mdl = "10011990";
+      _element = angular.element(_htmlDefault);
+      _compile(_element)(_scope);
+      _scope.$digest();
+      $(_element).trigger(_evtKD);
+      $(_element).trigger(_evtInput);
+
+      expect(_scope.mdl).toEqual("10/01/1990");
+    });
+
+    it('deve formatar a data, com todos caracteres possiveis - passando mascara mesAno', function() {
+      _scope.mdl = "011990";
+      _element = angular.element(_htmlMesAno);
+      _compile(_element)(_scope);
+      _scope.$digest();
+      $(_element).trigger(_evtKD);
+      $(_element).trigger(_evtInput);
+
+      expect(_scope.mdl).toEqual("01/1990");
+    });
+
+    it('deve formatar a data, com todos caracteres possiveis - passando mascara com erro', function() {
+      _scope.mdl = "10011990";
+      _element = angular.element(_htmlMascaraInvalida);
       _compile(_element)(_scope);
       _scope.$digest();
       $(_element).trigger(_evtKD);
